@@ -9,7 +9,6 @@ A Hadoop Hive adapter for Sequel. Uses rbhive and thrift.
 = Usage
 
   require 'sequel'
-  require 'sequel/hive'
 
   DB = Sequel.connect("hive://localhost")
   DB[:table_name].where(:date => "2011-05-05").limit(1)

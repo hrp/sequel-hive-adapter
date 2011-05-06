@@ -1,3 +1,5 @@
+require 'rbhive'
+
 module Sequel
   module Hive
     class Database < Sequel::Database

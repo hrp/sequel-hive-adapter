@@ -18,7 +18,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/hrp/sequel-hive-adapter"
   gem.license = "MIT"
   gem.summary = %Q{Hive adapter for Sequel.}
-  gem.description = %Q{Hive adapter for Sequel.}
+  gem.description = %Q{A Hadoop Hive adapter for Sequel. Uses RBHive and Thrift.}
   gem.email = "hrparmar@gmail.com"
   gem.authors = ["hrp"]
   # dependencies defined in Gemfile
