@@ -1,6 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    diff-lcs (1.1.2)
     git (1.2.5)
     jeweler (1.6.0)
       bundler (~> 1.0.0)
@@ -10,8 +11,18 @@ GEM
     rbhive (0.1.17)
       thrift (>= 0.4.0)
     rcov (0.9.9)
-    shoulda (2.11.3)
+    redgreen (1.2.2)
+    rspec (2.3.0)
+      rspec-core (~> 2.3.0)
+      rspec-expectations (~> 2.3.0)
+      rspec-mocks (~> 2.3.0)
+    rspec-core (2.3.1)
+    rspec-expectations (2.3.0)
+      diff-lcs (~> 1.1.2)
+    rspec-mocks (2.3.0)
+    sequel (3.23.0)
     thrift (0.6.0)
+    yard (0.6.8)
 
 PLATFORMS
   ruby
@@ -21,4 +32,7 @@ DEPENDENCIES
   jeweler (~> 1.6.0)
   rbhive
   rcov
-  shoulda
+  redgreen
+  rspec (~> 2.3.0)
+  sequel
+  yard (~> 0.6.0)
