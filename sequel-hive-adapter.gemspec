@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".document",
+    ".rspec",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
@@ -27,8 +28,8 @@ Gem::Specification.new do |s|
     "lib/sequel/adapters/hive.rb",
     "lib/sequel/hive.rb",
     "sequel-hive-adapter.gemspec",
-    "test/helper.rb",
-    "test/test_sequel-hive-adapter.rb"
+    "spec/sequel-hive-adapter_spec.rb",
+    "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/hrp/sequel-hive-adapter}
   s.licenses = ["MIT"]
@@ -40,24 +41,33 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<sequel>, [">= 0"])
       s.add_runtime_dependency(%q<rbhive>, [">= 0"])
-      s.add_development_dependency(%q<shoulda>, [">= 0"])
+      s.add_development_dependency(%q<rspec>, ["~> 2.3.0"])
+      s.add_development_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.0"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<redgreen>, [">= 0"])
     else
+      s.add_dependency(%q<sequel>, [">= 0"])
       s.add_dependency(%q<rbhive>, [">= 0"])
-      s.add_dependency(%q<shoulda>, [">= 0"])
+      s.add_dependency(%q<rspec>, ["~> 2.3.0"])
+      s.add_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.0"])
       s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<redgreen>, [">= 0"])
     end
   else
+    s.add_dependency(%q<sequel>, [">= 0"])
     s.add_dependency(%q<rbhive>, [">= 0"])
-    s.add_dependency(%q<shoulda>, [">= 0"])
+    s.add_dependency(%q<rspec>, ["~> 2.3.0"])
+    s.add_dependency(%q<yard>, ["~> 0.6.0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.0"])
     s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<redgreen>, [">= 0"])
   end
 end
 
