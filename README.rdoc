@@ -1,6 +1,6 @@
 = sequel-hive-adapter
 
-Description goes here.
+A Hadoop Hive adapter for Sequel. Uses rbhive and thrift.
 
 == Contributing to sequel-hive-adapter
  
