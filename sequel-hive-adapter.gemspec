@@ -19,10 +19,14 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
     "Gemfile",
+    "Gemfile.lock",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "lib/sequel/adapters/hive.rb",
+    "lib/sequel/hive.rb",
+    "sequel-hive-adapter.gemspec",
     "test/helper.rb",
     "test/test_sequel-hive-adapter.rb"
   ]
