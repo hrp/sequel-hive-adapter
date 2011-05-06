@@ -2,6 +2,15 @@
 
 A Hadoop Hive adapter for Sequel. Uses rbhive and thrift.
 
+= Installation
+
+  gem install sequel-hive-adapter
+  
+= Usage
+
+  require 'sequel'
+  require 'sequel/hive'
+
 == Contributing to sequel-hive-adapter
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
