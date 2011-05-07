@@ -13,6 +13,15 @@ A Hadoop Hive adapter for Sequel. Uses rbhive and thrift.
   DB = Sequel.connect("hive://localhost")
   DB[:table_name].where(:date => "2011-05-05").limit(1)
 
+Also from the commandline:
+
+  $ sequel "hive://localhost"
+  Connecting to localhost on port 10000
+  Your database is stored in DB...
+  > DB.tables
+  Executing Hive Query: SHOW TABLES
+  => [["table1","table2",...]]
+
 == Contributing to sequel-hive-adapter
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
