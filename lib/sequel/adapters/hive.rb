@@ -28,6 +28,7 @@ module Sequel
       
       def schema(table, opts={})
         hero = execute("DESCRIBE #{table}")
+        puts "test"
         hero[2..-1].map do |h|
           [h.first.strip.to_sym, {:db_type => h[1].strip.to_sym, :type => h[1].strip.to_sym}]
         end.reject{|r| [:"", :col_name].include?(r.first) || r.first[/Partition Information/] }
@@ -47,7 +48,8 @@ module Sequel
     class Dataset < Sequel::Dataset
       SELECT_CLAUSE_METHODS = clause_methods(:select, %w'distinct columns from join where group having compounds order limit')
 
-       CONVERT_FROM = { :string => :to_s, :bigint => :to_i }
+      #TODO better type conversion
+      CONVERT_FROM = { :boolean => :to_s, :string => :to_s, :bigint => :to_i, :float => :to_f, :double => :to_f, :int => :to_i, :smallint => :to_i, :tinyint => :to_i }
 
       def schema
         @schema ||= @db.schema(@opts[:from].first)
