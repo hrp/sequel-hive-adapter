@@ -28,7 +28,6 @@ module Sequel
       
       def schema(table, opts={})
         hero = execute("DESCRIBE #{table}")
-        puts "test"
         hero[2..-1].map do |h|
           [h.first.strip.to_sym, {:db_type => h[1].strip.to_sym, :type => h[1].strip.to_sym}]
         end.reject{|r| [:"", :col_name].include?(r.first) || r.first[/Partition Information/] }
@@ -65,6 +64,7 @@ module Sequel
       end
 
       def convert_type(column)
+        return :to_s if columns.select{|a| a.is_a? Symbol}.empty? # in case columns does not contain column names
         db_type = schema.select{|a| a.first == column}.first.last[:db_type]
         CONVERT_FROM[db_type]
       end
