@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sequel-hive-adapter}
-  s.version = "0.2.2"
+  s.version = "0.2.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["hrp"]
-  s.date = %q{2011-05-07}
+  s.date = %q{2011-05-10}
   s.description = %q{A Hadoop Hive adapter for Sequel. Uses RBHive and Thrift.}
   s.email = %q{hrparmar@gmail.com}
   s.extra_rdoc_files = [
