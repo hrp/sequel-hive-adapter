@@ -56,26 +56,32 @@ module Sequel
 
       def columns
         return @columns if @columns
-        if @opts[:select].nil? || @opts[:select].include?(:*)
+        if needs_schema_check?
           @columns = schema.map{|c| c.first.to_sym}
         else
-          @columns = @opts[:select]
+          @columns = @opts[:select].map do |col|
+            col.respond_to?(:aliaz) ? col.aliaz : col
+          end
         end
       end
 
       def convert_type(column)
-        return :to_s if columns.select{|a| a.is_a? Symbol}.empty? # in case columns does not contain column names
-        db_type = schema.select{|a| a.first == column}.first.last[:db_type]
+        return :to_s unless needs_schema_check?
+        db_type = schema.select do |a|
+          a.first == columns
+        end.first.last[:db_type]
         CONVERT_FROM[db_type]
       end
-      
+
       def fetch_rows(sql)
         execute(sql) do |result|
           begin
             width = result.first.size
             result.each do |r|
               row = {}
-              r.each_with_index {|v, i| row[columns[i]] = v.send(convert_type(columns[i]))}
+              r.each_with_index do |v, i| 
+                row[columns[i]] = v.send(convert_type(columns[i]))
+              end
               yield row
             end
           ensure
@@ -84,9 +90,13 @@ module Sequel
         end
         self
       end
-      
+
       private
-      
+
+      def needs_schema_check?
+        @opts[:select].nil? || @opts[:select].include?(:*)
+      end
+
       def select_clause_methods
         SELECT_CLAUSE_METHODS
       end
