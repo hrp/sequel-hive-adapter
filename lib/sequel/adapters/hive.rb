@@ -65,12 +65,13 @@ module Sequel
         end
       end
 
+      # Returns the function symbol that converts a column to the correct datatype
       def convert_type(column)
         return :to_s unless needs_schema_check?
         db_type = schema.select do |a|
-          a.first == columns
-        end.first.last[:db_type]
-        CONVERT_FROM[db_type]
+          a.first == column
+        end.flatten!
+        CONVERT_FROM[db_type.last[:db_type]]
       end
 
       def fetch_rows(sql)
