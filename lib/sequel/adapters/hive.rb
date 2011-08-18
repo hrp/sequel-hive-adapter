@@ -18,6 +18,7 @@ module Sequel
     
       def execute(sql, opts={})
         synchronize(opts[:server]) do |conn|
+
           conn.open
           r = log_yield(sql){conn.fetch(sql)}
           yield(r) if block_given?
@@ -34,7 +35,7 @@ module Sequel
       end
 
       def tables(opts={})
-        execute('SHOW TABLES')
+        execute('SHOW TABLES').map{|i| i.values}.reduce(:+).map{|i| i.to_sym}
       end
 
       private
@@ -67,6 +68,7 @@ module Sequel
 
       # Returns the function symbol that converts a column to the correct datatype
       def convert_type(column)
+        return column
         return :to_s unless needs_schema_check?
         db_type = schema.select do |a|
           a.first == column
@@ -77,14 +79,15 @@ module Sequel
       def fetch_rows(sql)
         execute(sql) do |result|
           begin
-            width = result.first.size
-            result.each do |r|
-              row = {}
-              r.each_with_index do |v, i| 
-                row[columns[i]] = v.send(convert_type(columns[i]))
-              end
-              yield row
-            end
+            yield result
+            #  width = result.first.size
+            #  result.each do |r|
+              #  row = {}
+              #  r.each_with_index do |v, i| 
+                #  row[columns[i]] = v.send(convert_type(columns[i]))
+              #  end
+              #  yield row
+            #  end
           ensure
             #  result.close
           end
