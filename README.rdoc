@@ -6,9 +6,7 @@ A Hadoop Hive adapter for Sequel. Uses rbhive and thrift.
 
   gem install sequel-hive-adapter
 
-== RubyGems
-
-  [ http://rubygems.org/gems/sequel-hive-adapter ]
+RubyGems.org: http://rubygems.org/gems/sequel-hive-adapter
   
 = Usage
 
