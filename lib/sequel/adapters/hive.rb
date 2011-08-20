@@ -87,13 +87,10 @@ module Sequel
 
       def fetch_rows(sql)
         execute(sql) do |result|
-          begin
-            result.each do |r|
-              yield r
-            end
-          ensure
-            result.close
+          result.each do |r|
+            yield r
           end
+          result.close
         end
         self
       end
