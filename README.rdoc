@@ -22,7 +22,7 @@ Also from the command-line:
   Your database is stored in DB...
   > DB.tables
   Executing Hive Query: SHOW TABLES
-  => [["table1","table2",...]]
+  => [[:table1,:table2,...]]
 
 == Contributing to sequel-hive-adapter
  
