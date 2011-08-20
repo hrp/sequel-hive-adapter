@@ -90,7 +90,6 @@ module Sequel
           result.each do |r|
             yield r
           end
-          result.close
         end
         self
       end
