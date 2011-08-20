@@ -18,7 +18,6 @@ module Sequel
     
       def execute(sql, opts={})
         synchronize(opts[:server]) do |conn|
-
           conn.open
           r = log_yield(sql){conn.fetch(sql)}
           yield(r) if block_given?
@@ -27,13 +26,21 @@ module Sequel
       end
       alias_method :do, :execute
       
+      #
+      # Returns the schema for the given table as an array with all members being arrays of length 2, 
+      # the first member being the column name, and the second member being a hash of column 
+      # information.
+      #
       def schema(table, opts={})
         hero = execute("DESCRIBE #{table}")
-        hero[2..-1].map do |h|
-          [h.first.strip.to_sym, {:db_type => h[1].strip.to_sym, :type => h[1].strip.to_sym}]
-        end.reject{|r| [:"", :col_name].include?(r.first) || r.first[/Partition Information/] }
+        hero.map do |h|
+          [ h[:col_name].to_sym, { :db_type => h[:data_type] , :comment => h[:comment] } ]
+        end
       end
 
+      #
+      # Returns a list of tables as symbols.
+      #
       def tables(opts={})
         execute('SHOW TABLES').map{|i| i.values}.reduce(:+).map{|i| i.to_sym}
       end
@@ -57,6 +64,8 @@ module Sequel
 
       def columns
         return @columns if @columns
+        #  self.column_names
+        p needs_schema_check?
         if needs_schema_check?
           @columns = schema.map{|c| c.first.to_sym}
         else
@@ -79,17 +88,11 @@ module Sequel
       def fetch_rows(sql)
         execute(sql) do |result|
           begin
-            yield result
-            #  width = result.first.size
-            #  result.each do |r|
-              #  row = {}
-              #  r.each_with_index do |v, i| 
-                #  row[columns[i]] = v.send(convert_type(columns[i]))
-              #  end
-              #  yield row
-            #  end
+            result.each do |r|
+              yield r
+            end
           ensure
-            #  result.close
+            result.close
           end
         end
         self

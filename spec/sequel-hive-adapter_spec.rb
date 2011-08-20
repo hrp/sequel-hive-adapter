@@ -6,6 +6,8 @@ describe "SequelHiveAdapter" do
     TEST_HOST = "172.16.87.131"  # CDH3 Demo VM
     @testdb = Sequel.connect("hive://#{TEST_HOST}")
     @testtable = :test_test_test
+    @sampletable = :pokes
+    @sampledb = @testdb[ @sampletable ]
   end
 
   it "should load" do
@@ -24,6 +26,17 @@ describe "SequelHiveAdapter" do
     res.each do |r|
       r.should be_a Symbol
     end
+  end
+
+  it "should list table schemas" do
+  end
+
+  it "should list table columns" do
+    @sampledb.columns.should == [:foo, :bar]
+  end
+
+  it "should return the value for one column" do
+    @sampledb.select(:foo).first.should == [{:foo => 5}]
   end
 
   pending "should convert string columns to strings" do
