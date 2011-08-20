@@ -26,15 +26,23 @@ module Sequel
       end
       alias_method :do, :execute
       
+      #
+      # Returns the schema for the given table as an array with all members being arrays of length 2, 
+      # the first member being the column name, and the second member being a hash of column 
+      # information.
+      #
       def schema(table, opts={})
         hero = execute("DESCRIBE #{table}")
-        hero[2..-1].map do |h|
-          [h.first.strip.to_sym, {:db_type => h[1].strip.to_sym, :type => h[1].strip.to_sym}]
-        end.reject{|r| [:"", :col_name].include?(r.first) || r.first[/Partition Information/] }
+        hero.map do |h|
+          [ h[:col_name].to_sym, { :db_type => h[:data_type] , :comment => h[:comment] } ]
+        end
       end
 
+      #
+      # Returns a list of tables as symbols.
+      #
       def tables(opts={})
-        execute('SHOW TABLES')
+        execute('SHOW TABLES').map{|i| i.values}.reduce(:+).map{|i| i.to_sym}
       end
 
       private
@@ -47,56 +55,24 @@ module Sequel
     class Dataset < Sequel::Dataset
       SELECT_CLAUSE_METHODS = clause_methods(:select, %w'distinct columns from join where group having compounds order limit')
 
-      #TODO better type conversion
-      CONVERT_FROM = { :boolean => :to_s, :string => :to_s, :bigint => :to_i, :float => :to_f, :double => :to_f, :int => :to_i, :smallint => :to_i, :tinyint => :to_i }
-
       def schema
         @schema ||= @db.schema(@opts[:from].first)
       end
 
       def columns
-        return @columns if @columns
-        if needs_schema_check?
-          @columns = schema.map{|c| c.first.to_sym}
-        else
-          @columns = @opts[:select].map do |col|
-            col.respond_to?(:aliaz) ? col.aliaz : col
-          end
-        end
-      end
-
-      # Returns the function symbol that converts a column to the correct datatype
-      def convert_type(column)
-        return :to_s unless needs_schema_check?
-        db_type = schema.select do |a|
-          a.first == column
-        end.flatten!
-        CONVERT_FROM[db_type.last[:db_type]]
+        @columns ||= schema.map{|c| c.first.to_sym}
       end
 
       def fetch_rows(sql)
         execute(sql) do |result|
-          begin
-            width = result.first.size
-            result.each do |r|
-              row = {}
-              r.each_with_index do |v, i| 
-                row[columns[i]] = v.send(convert_type(columns[i]))
-              end
-              yield row
-            end
-          ensure
-            #  result.close
+          result.each do |r|
+            yield r
           end
         end
         self
       end
 
       private
-
-      def needs_schema_check?
-        @opts[:select].nil? || @opts[:select].include?(:*)
-      end
 
       def select_clause_methods
         SELECT_CLAUSE_METHODS

@@ -8,7 +8,7 @@ GEM
       git (>= 1.2.5)
       rake
     rake (0.8.7)
-    rbhive (0.1.17)
+    rbhive (0.2.5)
       thrift (>= 0.4.0)
     rcov (0.9.9)
     redgreen (1.2.2)
@@ -21,7 +21,7 @@ GEM
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.3.0)
     sequel (3.23.0)
-    thrift (0.6.0)
+    thrift (0.7.0)
     yard (0.6.8)
 
 PLATFORMS
@@ -30,7 +30,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.0.0)
   jeweler (~> 1.6.0)
-  rbhive
+  rbhive (~> 0.2.2)
   rcov
   redgreen
   rspec (~> 2.3.0)
