@@ -36,8 +36,9 @@ describe "SequelHiveAdapter" do
   end
 
   it "should return the value for one column" do
-    @sampledb.select(:foo).first.should == [{:foo => 5}]
+    @sampledb.select(:foo).first.should == {:foo => 5}
   end
+  
 
   pending "should convert string columns to strings" do
   end
