@@ -53,7 +53,7 @@ module Sequel
     end
     
     class Dataset < Sequel::Dataset
-      SELECT_CLAUSE_METHODS = clause_methods(:select, %w'distinct columns from join where group having compounds order limit')
+      SELECT_CLAUSE_METHODS = clause_methods(:select, %w'distinct select columns from join where group having compounds order limit')
 
       def schema
         @schema ||= @db.schema(@opts[:from].first)
