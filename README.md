@@ -1,29 +1,28 @@
 # sequel-hive-adapter
 
-A Hadoop Hive adapter for Sequel. Uses [rbhive](https://github.com/forward/rbhive] and thrift[http://thrift.apache.org/).
+A Hadoop Hive adapter for Sequel. Uses [rbhive](https://github.com/forward/rbhive) and [thrift](http://thrift.apache.org/).
 
 ## Installation
 
-` gem install sequel-hive-adapter
-`
-
-
+` gem install sequel-hive-adapter`
   
 ## Usage
-`
-  require 'sequel'
-  DB = Sequel.connect("hive://localhost")
-  DB[:table_name].where(":date => "2011-05-05").limit(1)
-`
+```ruby
+require 'sequel'
+DB = Sequel.connect("hive://localhost")
+DB[:table_name].where(date: "2011-05-05").limit(1)
+```
 
 Also from the command-line:
 
-`  $ sequel "hive://localhost"
-  Connecting to localhost on port 10000
-  Your database is stored in DB...
-   DB.tables
-  Executing Hive Query: SHOW TABLES
-  => [[:table1,:table2,…]]`
+```
+$ sequel "hive://localhost"
+Connecting to localhost on port 10000
+Your database is stored in DB...
+DB.tables
+Executing Hive Query: SHOW TABLES
+=> [[:table1,:table2,…]]
+```
 
 ## Contributing to sequel-hive-adapter
  
