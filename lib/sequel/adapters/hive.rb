@@ -1,4 +1,5 @@
 require 'rbhive'
+require 'tempfile'
 
 module Sequel
   module Hive
@@ -10,6 +11,14 @@ module Sequel
       def connect(server)
         opts = server_opts(server)
         RBHive::Connection.new(opts[:host], opts[:port] || 10_000)
+      end
+
+      def column_definition_primary_key_sql(sql, column)
+        "" # noop        
+      end
+
+      def type_literal_generic_string(column)
+        "string"
       end
       
       def dataset(opts = nil)
@@ -45,6 +54,13 @@ module Sequel
         execute('SHOW TABLES').map{|i| i.values}.reduce(:+).map{|i| i.to_sym}
       end
 
+      def table_exists?(name)
+        sch, table_name = schema_and_table(name)
+        name = SQL::QualifiedIdentifier.new(sch, table_name) if sch
+
+        !execute("SHOW TABLES '#{name}'").empty?
+      end
+
       private
 
       def disconnect_connection(c)
@@ -72,7 +88,60 @@ module Sequel
         self
       end
 
-      private
+      def insert_into_sql(sql)
+        sql << " INTO TABLE "
+
+        source_list_append(sql, @opts[:from])
+      end
+
+      def insert_columns_sql(sql)
+        if is_load?
+          sql
+        else
+          super(sql)
+        end 
+      end
+
+      def insert_insert_sql(sql)
+        if is_load?
+          file = Tempfile.new('sequel-hive-')
+  
+          begin
+            values = opts[:values]
+
+            values.each do |v|
+              file << "#{v}\001"
+            end
+
+            file << "\n"
+          ensure
+            file.close
+          end
+
+          sql << "LOAD DATA LOCAL INPATH '#{file.path}' "
+        else
+          super(sql)
+        end
+      end
+
+      def insert_values_sql(sql)
+        if is_load?
+          sql
+        else
+          super(sql)
+        end
+      end
+
+      def is_load?
+        values = opts[:values]
+
+        case values
+        when Dataset
+          false
+        else
+          true
+        end
+      end
 
       def select_clause_methods
         SELECT_CLAUSE_METHODS
