@@ -3,8 +3,13 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe "SequelHiveAdapter" do
 
   before(:all) do
-    TEST_HOST = "172.16.87.131"  # CDH3 Demo VM
-    @testdb = Sequel.connect("hive://#{TEST_HOST}")
+    config = {
+      adapter: 'hive',
+      host: '172.16.87.131',
+      port: 10_000,
+      database: 'tmp'
+    }
+    @testdb = Sequel.connect(config)
     @testtable = :test_test_test
     @sampletable = :pokes
     @sampledb = @testdb[ @sampletable ]
@@ -14,11 +19,15 @@ describe "SequelHiveAdapter" do
     @testdb.should be_an_instance_of Sequel::Hive::Database
   end
 
-  pending "should create and drop tables" do
-    @testdb.create_table @testtable do
-      column :name, :string
-      column :num, :integer
-    end
+  it "should create and drop tables" do
+    expect{
+      @testdb.execute("drop table if exists #{@testtable}")
+      @testdb.create_table @testtable do
+        column :name, :string
+        column :num, :int
+      end
+      @testdb.execute("drop table if exists #{@testtable}")
+    }.to_not raise_error
   end
 
   it "should list tables as symbols" do
@@ -38,7 +47,7 @@ describe "SequelHiveAdapter" do
   it "should return the value for one column" do
     @sampledb.select(:foo).first.should == {:foo => 5}
   end
-  
+
 
   pending "should convert string columns to strings" do
   end
